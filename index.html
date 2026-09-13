@@ -1,591 +1,4276 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>ConnectX</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            color: white;
-            overflow: hidden;
-            background: linear-gradient(135deg, #12002f, #24105c, #0066ff);
-        }
-
-        /* =========================
-           BACKGROUND
-        ========================= */
-
-        .circle {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(2px);
-            opacity: 0.35;
-            animation: float 8s infinite ease-in-out;
-            pointer-events: none;
-        }
-
-        .circle1 {
-            width: 300px;
-            height: 300px;
-            background: #ff00cc;
-            top: -100px;
-            left: -80px;
-        }
-
-        .circle2 {
-            width: 400px;
-            height: 400px;
-            background: #00eaff;
-            right: -150px;
-            bottom: -150px;
-            animation-delay: 2s;
-        }
-
-        .circle3 {
-            width: 180px;
-            height: 180px;
-            background: #7b00ff;
-            right: 30%;
-            top: 15%;
-            animation-delay: 4s;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) scale(1);
-            }
-
-            50% {
-                transform: translateY(-30px) scale(1.1);
-            }
-        }
-
-        /* =========================
-           CURSOR PARTICLES
-        ========================= */
-
-        .particle {
-            position: fixed;
-
-            width: 5px;
-            height: 5px;
-
-            border-radius: 50%;
-
-            pointer-events: none;
-
-            z-index: 9999;
-
-            background: #00eaff;
-
-            box-shadow:
-                0 0 6px #00eaff,
-                0 0 12px #7b00ff;
-
-            animation: particleFade 0.8s linear forwards;
-        }
-
-        @keyframes particleFade {
-
-            0% {
-                opacity: 1;
-                transform: scale(1) translate(0, 0);
-            }
-
-            100% {
-                opacity: 0;
-                transform:
-                    scale(0)
-                    translate(
-                        var(--moveX),
-                        var(--moveY)
-                    );
-            }
-        }
-
-        /* =========================
-           NAVIGATION
-        ========================= */
-
-        nav {
-            height: 80px;
-
-            display: flex;
-            align-items: center;
-
-            padding: 0 7%;
-
-            position: relative;
-
-            z-index: 5;
-        }
-
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        .logo span {
-            color: #00eaff;
-        }
-
-        /* =========================
-           HERO
-        ========================= */
-
-        .hero {
-            height: calc(100vh - 80px);
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-
-            padding: 0 8%;
-
-            position: relative;
-
-            z-index: 2;
-        }
-
-        .hero-text {
-            max-width: 600px;
-        }
-
-        .badge {
-            display: inline-block;
-
-            padding: 8px 15px;
-
-            border:
-                1px solid rgba(255,255,255,0.3);
-
-            border-radius: 30px;
-
-            background:
-                rgba(255,255,255,0.08);
-
-            margin-bottom: 20px;
-
-            font-size: 14px;
-        }
-
-        h1 {
-            font-size: clamp(50px, 7vw, 90px);
-
-            line-height: 0.95;
-
-            margin-bottom: 25px;
-        }
-
-        h1 span {
-            color: #00eaff;
-        }
-
-        .description {
-            font-size: 19px;
-
-            line-height: 1.6;
-
-            color: #d9dcff;
-
-            margin-bottom: 35px;
-        }
-
-        /* =========================
-           BUTTONS
-        ========================= */
-
-        button {
-            border: none;
-
-            padding: 14px 26px;
-
-            border-radius: 30px;
-
-            font-size: 15px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-
-            transition: 0.3s;
-        }
-
-        .login {
-            background: transparent;
-
-            color: white;
-
-            border:
-                1px solid rgba(255,255,255,0.4);
-        }
-
-        .signup {
-            background: #00eaff;
-
-            color: #06102b;
-
-            box-shadow:
-                0 0 25px
-                rgba(0,234,255,0.35);
-        }
-
-        button:hover {
-            transform: translateY(-4px);
-
-            box-shadow:
-                0 10px 30px
-                rgba(0,0,0,0.3);
-        }
-
-        .hero-buttons button {
-            margin-right: 12px;
-        }
-
-        /* =========================
-           CHAT PREVIEW
-        ========================= */
-
-        .preview {
-            width: 390px;
-
-            height: 470px;
-
-            border-radius: 25px;
-
-            padding: 20px;
-
-            background:
-                rgba(255,255,255,0.1);
-
-            border:
-                1px solid rgba(255,255,255,0.2);
-
-            backdrop-filter: blur(20px);
-
-            box-shadow:
-                0 30px 80px
-                rgba(0,0,0,0.3);
-
-            animation:
-                cardFloat 5s
-                infinite ease-in-out;
-        }
-
-        @keyframes cardFloat {
-
-            0%, 100% {
-                transform:
-                    translateY(0)
-                    rotate(1deg);
-            }
-
-            50% {
-                transform:
-                    translateY(-12px)
-                    rotate(-1deg);
-            }
-        }
-
-        .preview-title {
-            font-weight: bold;
-
-            margin-bottom: 20px;
-
-            font-size: 18px;
-        }
-
-        .online {
-            color: #55ff9a;
-
-            font-size: 12px;
-
-            margin-top: 5px;
-        }
-
-        .message {
-            padding: 13px 16px;
-
-            border-radius: 18px;
-
-            margin: 12px 0;
-
-            max-width: 75%;
-
-            font-size: 14px;
-        }
-
-        .received {
-            background:
-                rgba(255,255,255,0.13);
-        }
-
-        .sent {
-            background: #006cff;
-
-            margin-left: auto;
-        }
-
-        /* =========================
-           MOBILE
-        ========================= */
-
-        @media (max-width: 850px) {
-
-            body {
-                overflow: auto;
-            }
-
-            .hero {
-                flex-direction: column;
-
-                justify-content: center;
-
-                text-align: center;
-
-                gap: 40px;
-            }
-
-            .preview {
-                width: 330px;
-
-                height: 390px;
-            }
-
-            .hero-buttons button {
-                margin-bottom: 10px;
-            }
-        }
-
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ConnectX — Connect. Communicate. Belong.</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --bg:#070812;
+    --bg2:#0c0e1b;
+    --panel:rgba(18,20,37,.72);
+    --panel2:rgba(24,27,48,.82);
+    --border:rgba(255,255,255,.09);
+    --text:#f7f8ff;
+    --muted:#9096ad;
+    --blue:#6c63ff;
+    --purple:#9b5cff;
+    --cyan:#36d9ff;
+    --pink:#ff4fd8;
+    --green:#44e59a;
+    --danger:#ff5571;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Inter,Arial,sans-serif;
+    background:
+        radial-gradient(circle at 10% 10%,rgba(108,99,255,.18),transparent 30%),
+        radial-gradient(circle at 90% 20%,rgba(54,217,255,.10),transparent 28%),
+        radial-gradient(circle at 50% 100%,rgba(255,79,216,.09),transparent 32%),
+        var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    overflow:hidden;
+}
+
+/* ================= BACKGROUND ================= */
+
+.bg{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+}
+
+.orb{
+    position:absolute;
+    width:380px;
+    height:380px;
+    border-radius:50%;
+    filter:blur(90px);
+    opacity:.12;
+    animation:orbFloat 12s ease-in-out infinite alternate;
+}
+
+.orb.one{
+    background:#6c63ff;
+    top:-150px;
+    left:-100px;
+}
+
+.orb.two{
+    background:#36d9ff;
+    right:-150px;
+    top:30%;
+    animation-delay:2s;
+}
+
+.orb.three{
+    background:#ff4fd8;
+    left:35%;
+    bottom:-220px;
+    animation-delay:4s;
+}
+
+@keyframes orbFloat{
+    from{
+        transform:translate(0,0) scale(1);
+    }
+    to{
+        transform:translate(80px,40px) scale(1.15);
+    }
+}
+
+/* ================= AUTH ================= */
+
+#authScreen{
+    position:fixed;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:20;
+    padding:20px;
+}
+
+.auth-card{
+    width:min(450px,100%);
+    background:rgba(13,15,29,.78);
+    border:1px solid var(--border);
+    border-radius:28px;
+    padding:34px;
+    backdrop-filter:blur(30px);
+    box-shadow:
+        0 40px 100px rgba(0,0,0,.5),
+        0 0 80px rgba(108,99,255,.10);
+    animation:authIn .7s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes authIn{
+    from{
+        opacity:0;
+        transform:translateY(30px) scale(.96);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:10px;
+}
+
+.logo-mark{
+    width:46px;
+    height:46px;
+    border-radius:15px;
+    background:linear-gradient(135deg,#6c63ff,#36d9ff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+    box-shadow:0 0 30px rgba(108,99,255,.35);
+    animation:logoPulse 3s ease-in-out infinite;
+}
+
+@keyframes logoPulse{
+    0%,100%{box-shadow:0 0 20px rgba(108,99,255,.25)}
+    50%{box-shadow:0 0 45px rgba(108,99,255,.55)}
+}
+
+.logo-text{
+    font-size:25px;
+    font-weight:900;
+    letter-spacing:-1px;
+}
+
+.auth-subtitle{
+    color:var(--muted);
+    margin-bottom:28px;
+    font-size:14px;
+}
+
+.tabs{
+    display:flex;
+    padding:4px;
+    background:rgba(255,255,255,.04);
+    border-radius:13px;
+    margin-bottom:22px;
+}
+
+.tab{
+    flex:1;
+    border:0;
+    background:transparent;
+    color:var(--muted);
+    padding:11px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:700;
+    transition:.25s;
+}
+
+.tab.active{
+    background:rgba(255,255,255,.09);
+    color:white;
+    box-shadow:0 5px 20px rgba(0,0,0,.15);
+}
+
+.input-group{
+    margin-bottom:14px;
+}
+
+.input-group label{
+    display:block;
+    font-size:12px;
+    color:#aeb4ca;
+    margin-bottom:7px;
+    font-weight:700;
+}
+
+.input{
+    width:100%;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.045);
+    color:white;
+    padding:14px 15px;
+    border-radius:13px;
+    outline:none;
+    transition:.25s;
+}
+
+.input:focus{
+    border-color:rgba(108,99,255,.7);
+    box-shadow:0 0 0 4px rgba(108,99,255,.10);
+    transform:translateY(-1px);
+}
+
+.primary-btn{
+    width:100%;
+    border:0;
+    color:white;
+    padding:14px;
+    border-radius:13px;
+    background:linear-gradient(110deg,#6c63ff,#9b5cff,#36d9ff);
+    background-size:200% 200%;
+    cursor:pointer;
+    font-weight:800;
+    transition:.25s;
+    animation:gradientMove 5s ease infinite;
+    box-shadow:0 10px 30px rgba(108,99,255,.2);
+}
+
+.primary-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 16px 35px rgba(108,99,255,.32);
+}
+
+.primary-btn:active{
+    transform:scale(.98);
+}
+
+@keyframes gradientMove{
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
+.auth-message{
+    margin-top:14px;
+    text-align:center;
+    font-size:13px;
+    color:#ff8799;
+}
+
+/* ================= APP ================= */
+
+#app{
+    display:none;
+    height:100vh;
+    position:relative;
+    z-index:2;
+}
+
+.layout{
+    display:grid;
+    grid-template-columns:235px 1fr;
+    height:100vh;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+    border-right:1px solid var(--border);
+    background:rgba(8,10,20,.70);
+    backdrop-filter:blur(25px);
+    padding:18px 14px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    z-index:5;
+}
+
+.brand{
+    padding:8px 10px 24px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.brand .logo-mark{
+    width:38px;
+    height:38px;
+    border-radius:12px;
+    font-size:13px;
+}
+
+.brand span{
+    font-size:19px;
+    font-weight:900;
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.nav-btn{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    border:1px solid transparent;
+    background:transparent;
+    color:#9ba1b8;
+    padding:12px 13px;
+    border-radius:13px;
+    cursor:pointer;
+    text-align:left;
+    transition:.25s;
+    font-weight:700;
+}
+
+.nav-btn:hover{
+    background:rgba(255,255,255,.045);
+    color:white;
+    transform:translateX(3px);
+}
+
+.nav-btn.active{
+    color:white;
+    background:linear-gradient(90deg,rgba(108,99,255,.18),rgba(108,99,255,.04));
+    border-color:rgba(108,99,255,.18);
+    box-shadow:inset 3px 0 0 #6c63ff;
+}
+
+.nav-icon{
+    width:26px;
+    text-align:center;
+    font-size:17px;
+}
+
+.sidebar-bottom{
+    margin-top:auto;
+}
+
+.user-mini{
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.035);
+    border-radius:16px;
+    padding:11px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar{
+    width:38px;
+    height:38px;
+    min-width:38px;
+    border-radius:13px;
+    background:linear-gradient(135deg,#6c63ff,#36d9ff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+}
+
+.user-mini-name{
+    font-size:13px;
+    font-weight:800;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.user-mini-status{
+    color:var(--green);
+    font-size:10px;
+    margin-top:2px;
+}
+
+/* ================= MAIN ================= */
+
+.main{
+    min-width:0;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+}
+
+.topbar{
+    height:70px;
+    min-height:70px;
+    border-bottom:1px solid var(--border);
+    background:rgba(8,10,20,.54);
+    backdrop-filter:blur(25px);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    position:relative;
+    z-index:4;
+}
+
+.topbar-title{
+    font-size:18px;
+    font-weight:900;
+}
+
+.topbar-user{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    color:#b7bdd0;
+    font-size:12px;
+    font-weight:700;
+}
+
+/* ================= PAGES ================= */
+
+.pages{
+    flex:1;
+    min-height:0;
+    position:relative;
+}
+
+.page{
+    position:absolute;
+    inset:0;
+    padding:25px;
+    overflow:auto;
+    display:none;
+    animation:pageIn .35s ease;
+}
+
+.page.active{
+    display:block;
+}
+
+@keyframes pageIn{
+    from{
+        opacity:0;
+        transform:translateY(8px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+/* ================= HOME ================= */
+
+.hero{
+    min-height:220px;
+    border:1px solid var(--border);
+    border-radius:25px;
+    padding:30px;
+    position:relative;
+    overflow:hidden;
+    background:
+        linear-gradient(120deg,rgba(108,99,255,.16),rgba(54,217,255,.06)),
+        rgba(18,20,37,.65);
+}
+
+.hero:before{
+    content:"";
+    position:absolute;
+    width:280px;
+    height:280px;
+    border-radius:50%;
+    background:rgba(108,99,255,.15);
+    filter:blur(60px);
+    right:-80px;
+    top:-100px;
+    animation:heroGlow 5s ease-in-out infinite alternate;
+}
+
+@keyframes heroGlow{
+    from{transform:translate(0,0)}
+    to{transform:translate(-30px,30px)}
+}
+
+.hero h1{
+    font-size:clamp(30px,4vw,52px);
+    letter-spacing:-2px;
+    position:relative;
+    z-index:1;
+}
+
+.hero h1 span{
+    background:linear-gradient(90deg,#fff,#9f98ff,#6ee7ff);
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.hero p{
+    margin-top:10px;
+    color:#a0a6ba;
+    max-width:620px;
+    line-height:1.6;
+    position:relative;
+    z-index:1;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-top:18px;
+}
+
+.stat{
+    padding:20px;
+    border:1px solid var(--border);
+    background:rgba(18,20,37,.65);
+    border-radius:19px;
+    transition:.25s;
+}
+
+.stat:hover{
+    transform:translateY(-5px);
+    border-color:rgba(108,99,255,.28);
+    box-shadow:0 15px 40px rgba(0,0,0,.18);
+}
+
+.stat-value{
+    font-size:27px;
+    font-weight:900;
+}
+
+.stat-label{
+    color:#8d93a8;
+    font-size:11px;
+    margin-top:5px;
+}
+
+/* ================= COMMON PANELS ================= */
+
+.panel{
+    border:1px solid var(--border);
+    background:rgba(15,17,31,.68);
+    border-radius:21px;
+    overflow:hidden;
+    box-shadow:0 15px 50px rgba(0,0,0,.10);
+}
+
+.panel-header{
+    padding:18px 20px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.panel-title{
+    font-weight:900;
+}
+
+.panel-sub{
+    color:#858ca3;
+    font-size:11px;
+    margin-top:3px;
+}
+
+/* ================= CHAT ================= */
+
+.chat-layout{
+    height:100%;
+    display:grid;
+    grid-template-columns:285px 1fr;
+    gap:15px;
+}
+
+.friend-panel{
+    height:100%;
+    display:flex;
+    flex-direction:column;
+}
+
+.friend-list{
+    overflow:auto;
+    padding:9px;
+}
+
+.friend-card{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:11px;
+    border-radius:14px;
+    cursor:pointer;
+    transition:.22s;
+    margin-bottom:4px;
+}
+
+.friend-card:hover{
+    background:rgba(255,255,255,.045);
+    transform:translateX(3px);
+}
+
+.friend-card.active{
+    background:rgba(108,99,255,.14);
+}
+
+.friend-info{
+    min-width:0;
+}
+
+.friend-name{
+    font-size:13px;
+    font-weight:800;
+}
+
+.friend-status{
+    color:#70778e;
+    font-size:10px;
+    margin-top:2px;
+}
+
+.chat-panel{
+    min-width:0;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+}
+
+.chat-header{
+    padding:13px 17px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.chat-header-info{
+    min-width:0;
+}
+
+.chat-header-name{
+    font-size:14px;
+    font-weight:900;
+}
+
+.chat-header-status{
+    font-size:10px;
+    color:var(--green);
+    margin-top:2px;
+}
+
+.messages{
+    flex:1;
+    overflow:auto;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+}
+
+.empty-chat{
+    margin:auto;
+    text-align:center;
+    color:#777e95;
+}
+
+.empty-icon{
+    font-size:38px;
+    margin-bottom:10px;
+    animation:bob 2.5s ease-in-out infinite;
+}
+
+@keyframes bob{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-7px)}
+}
+
+/* ================= MESSAGE BUBBLES ================= */
+
+.message-row{
+    display:flex;
+    width:100%;
+    animation:messageIn .28s cubic-bezier(.2,.8,.2,1);
+}
+
+.message-row.mine{
+    justify-content:flex-end;
+}
+
+@keyframes messageIn{
+    from{
+        opacity:0;
+        transform:translateY(8px) scale(.98);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.message-bubble{
+    max-width:min(68%,560px);
+    padding:9px 12px;
+    border-radius:15px;
+    background:rgba(255,255,255,.055);
+    border:1px solid rgba(255,255,255,.06);
+    color:#edf0fa;
+    font-size:12px;
+    line-height:1.5;
+    word-break:break-word;
+}
+
+.mine .message-bubble{
+    background:linear-gradient(135deg,rgba(108,99,255,.88),rgba(125,76,255,.82));
+    border-color:rgba(255,255,255,.08);
+    border-bottom-right-radius:5px;
+}
+
+.message-row:not(.mine) .message-bubble{
+    border-bottom-left-radius:5px;
+}
+
+.message-author{
+    font-size:9px;
+    color:#8f96ad;
+    font-weight:800;
+    margin-bottom:3px;
+}
+
+.mine .message-author{
+    color:#d9d5ff;
+}
+
+.message-time{
+    font-size:8px;
+    color:#777e93;
+    margin-top:3px;
+    text-align:right;
+}
+
+.mine .message-time{
+    color:#d7d2ff;
+}
+
+/* ================= SMALL COMPOSER ================= */
+
+.composer{
+    padding:10px 13px;
+    border-top:1px solid var(--border);
+    background:rgba(9,11,21,.72);
+}
+
+.composer-inner{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(255,255,255,.075);
+    border-radius:15px;
+    padding:5px 6px 5px 10px;
+    transition:.25s;
+}
+
+.composer-inner:focus-within{
+    border-color:rgba(108,99,255,.38);
+    box-shadow:0 0 0 3px rgba(108,99,255,.07);
+}
+
+.message-input{
+    flex:1;
+    min-width:0;
+    border:0;
+    outline:0;
+    background:transparent;
+    color:white;
+    padding:7px 3px;
+    font-size:12px;
+}
+
+.message-input::placeholder{
+    color:#686f84;
+}
+
+.icon-btn{
+    width:30px;
+    height:30px;
+    min-width:30px;
+    border:0;
+    border-radius:9px;
+    background:transparent;
+    color:#9ca3b8;
+    cursor:pointer;
+    transition:.2s;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.icon-btn:hover{
+    color:white;
+    background:rgba(255,255,255,.08);
+    transform:translateY(-2px);
+}
+
+.send-btn{
+    width:31px;
+    height:31px;
+    min-width:31px;
+    border:0;
+    border-radius:10px;
+    background:linear-gradient(135deg,#6c63ff,#36d9ff);
+    color:white;
+    cursor:pointer;
+    font-weight:900;
+    transition:.2s;
+}
+
+.send-btn:hover{
+    transform:scale(1.08) rotate(-3deg);
+    box-shadow:0 5px 20px rgba(108,99,255,.3);
+}
+
+/* ================= EMOJI ================= */
+
+.emoji-panel{
+    position:absolute;
+    bottom:62px;
+    right:15px;
+    width:260px;
+    max-height:190px;
+    overflow:auto;
+    padding:10px;
+    border:1px solid var(--border);
+    background:rgba(17,19,34,.96);
+    backdrop-filter:blur(20px);
+    border-radius:15px;
+    display:none;
+    grid-template-columns:repeat(8,1fr);
+    gap:4px;
+    box-shadow:0 20px 50px rgba(0,0,0,.35);
+    z-index:20;
+}
+
+.emoji-panel.show{
+    display:grid;
+    animation:emojiIn .2s ease;
+}
+
+@keyframes emojiIn{
+    from{
+        opacity:0;
+        transform:translateY(7px) scale(.96);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.emoji{
+    border:0;
+    background:transparent;
+    font-size:18px;
+    padding:5px;
+    cursor:pointer;
+    border-radius:7px;
+    transition:.15s;
+}
+
+.emoji:hover{
+    background:rgba(255,255,255,.08);
+    transform:scale(1.2);
+}
+
+/* ================= REQUESTS ================= */
+
+.request-top{
+    max-width:700px;
+    margin-bottom:18px;
+}
+
+.request-box{
+    display:flex;
+    gap:8px;
+}
+
+.request-box .input{
+    flex:1;
+}
+
+.small-btn{
+    border:0;
+    padding:0 18px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#6c63ff,#9b5cff);
+    color:white;
+    font-weight:800;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.small-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 25px rgba(108,99,255,.25);
+}
+
+.request-list{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    max-width:700px;
+}
+
+.request-card{
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.035);
+    padding:14px;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    animation:messageIn .25s ease;
+}
+
+/* ================= COMMUNITIES ================= */
+
+.community-page{
+    height:100%;
+}
+
+.community-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:18px;
+}
+
+.community-heading h2{
+    font-size:25px;
+    font-weight:900;
+}
+
+.community-heading p{
+    color:#858ca2;
+    font-size:12px;
+    margin-top:5px;
+}
+
+.create-btn{
+    border:1px solid rgba(108,99,255,.3);
+    background:rgba(108,99,255,.13);
+    color:white;
+    padding:11px 15px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:800;
+    transition:.22s;
+}
+
+.create-btn:hover{
+    background:rgba(108,99,255,.25);
+    transform:translateY(-2px);
+    box-shadow:0 10px 30px rgba(108,99,255,.18);
+}
+
+.community-layout{
+    height:calc(100% - 70px);
+    display:grid;
+    grid-template-columns:310px 1fr;
+    gap:15px;
+}
+
+.community-list-panel{
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+}
+
+.community-list{
+    overflow:auto;
+    padding:9px;
+}
+
+.community-card{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:12px;
+    border-radius:15px;
+    cursor:pointer !important;
+    user-select:none;
+    transition:.25s;
+    border:1px solid transparent;
+    margin-bottom:4px;
+}
+
+.community-card:hover{
+    background:rgba(255,255,255,.045);
+    transform:translateX(4px);
+    border-color:rgba(108,99,255,.13);
+}
+
+.community-card.active{
+    background:linear-gradient(90deg,rgba(108,99,255,.16),rgba(108,99,255,.04));
+    border-color:rgba(108,99,255,.18);
+}
+
+.community-card-info{
+    min-width:0;
+    pointer-events:none;
+}
+
+.community-card-name{
+    font-size:13px;
+    font-weight:900;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.community-card-desc{
+    font-size:10px;
+    color:#70778c;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    margin-top:3px;
+}
+
+.community-chat{
+    min-width:0;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+}
+
+.community-header{
+    padding:13px 17px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.community-header-info{
+    min-width:0;
+}
+
+.community-header-name{
+    font-weight:900;
+    font-size:14px;
+}
+
+.community-header-status{
+    color:#7d8499;
+    font-size:10px;
+    margin-top:2px;
+}
+
+.community-actions{
+    margin-left:auto;
+    display:flex;
+    gap:6px;
+}
+
+.delete-btn{
+    border:1px solid rgba(255,85,113,.17);
+    background:rgba(255,85,113,.07);
+    color:#ff7288;
+    width:32px;
+    height:32px;
+    border-radius:9px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.delete-btn:hover{
+    background:rgba(255,85,113,.16);
+    transform:scale(1.06);
+}
+
+.privacy-pill{
+    font-size:9px;
+    color:#8d94a9;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.06);
+    padding:5px 8px;
+    border-radius:999px;
+}
+
+.community-messages{
+    flex:1;
+    overflow:auto;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+}
+
+/* IMPORTANT PRIVACY:
+   Community messages show "You" or "Member".
+   Actual usernames are NOT displayed in community chat. */
+
+.community-message-author{
+    font-size:9px;
+    font-weight:900;
+    color:#9198ad;
+    margin-bottom:3px;
+}
+
+.community-row.mine .community-message-author{
+    color:#dedaff;
+}
+
+/* ================= EMPTY ================= */
+
+.empty-state{
+    padding:40px 20px;
+    text-align:center;
+    color:#70778d;
+}
+
+.empty-state-icon{
+    font-size:34px;
+    margin-bottom:10px;
+    animation:bob 2.5s ease-in-out infinite;
+}
+
+.empty-state-title{
+    color:#b9bfd1;
+    font-weight:800;
+    font-size:14px;
+}
+
+.empty-state-text{
+    margin-top:5px;
+    font-size:11px;
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    backdrop-filter:blur(10px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-card{
+    width:min(450px,100%);
+    background:#111322;
+    border:1px solid var(--border);
+    border-radius:23px;
+    padding:23px;
+    box-shadow:0 30px 100px rgba(0,0,0,.55);
+    animation:modalIn .3s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes modalIn{
+    from{
+        opacity:0;
+        transform:scale(.94) translateY(15px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.modal-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.modal-head h3{
+    font-size:19px;
+}
+
+.close-btn{
+    border:0;
+    background:rgba(255,255,255,.05);
+    color:#a6acc0;
+    width:31px;
+    height:31px;
+    border-radius:9px;
+    cursor:pointer;
+}
+
+.modal-actions{
+    display:flex;
+    gap:8px;
+    margin-top:18px;
+}
+
+.cancel-btn{
+    flex:1;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.04);
+    color:#b7bdd0;
+    border-radius:12px;
+    padding:12px;
+    cursor:pointer;
+}
+
+.modal-actions .primary-btn{
+    flex:1;
+}
+
+/* ================= TOAST ================= */
+
+.toast{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    padding:12px 16px;
+    border:1px solid var(--border);
+    background:rgba(17,19,34,.92);
+    backdrop-filter:blur(20px);
+    border-radius:13px;
+    color:white;
+    font-size:12px;
+    font-weight:700;
+    box-shadow:0 15px 40px rgba(0,0,0,.3);
+    transform:translateY(20px);
+    opacity:0;
+    pointer-events:none;
+    transition:.3s;
+    z-index:200;
+}
+
+.toast.show{
+    opacity:1;
+    transform:none;
+}
+
+/* ================= FILE NAME ================= */
+
+.file-name{
+    font-size:9px;
+    color:#7d8499;
+    padding:3px 7px;
+    white-space:nowrap;
+    overflow:hidden;
+    max-width:130px;
+}
+
+/* ================= SCROLLBAR ================= */
+
+::-webkit-scrollbar{
+    width:5px;
+    height:5px;
+}
+
+::-webkit-scrollbar-track{
+    background:transparent;
+}
+
+::-webkit-scrollbar-thumb{
+    background:rgba(255,255,255,.11);
+    border-radius:20px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background:rgba(255,255,255,.2);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:900px){
+
+    .layout{
+        grid-template-columns:75px 1fr;
+    }
+
+    .brand span,
+    .nav-btn span:not(.nav-icon),
+    .user-mini > div:not(.avatar){
+        display:none;
+    }
+
+    .brand{
+        justify-content:center;
+    }
+
+    .nav-btn{
+        justify-content:center;
+    }
+
+    .user-mini{
+        justify-content:center;
+    }
+
+    .chat-layout{
+        grid-template-columns:220px 1fr;
+    }
+
+    .community-layout{
+        grid-template-columns:230px 1fr;
+    }
+}
+
+@media(max-width:680px){
+
+    body{
+        overflow:auto;
+    }
+
+    #app{
+        height:auto;
+        min-height:100vh;
+    }
+
+    .layout{
+        display:block;
+        min-height:100vh;
+    }
+
+    .sidebar{
+        position:fixed;
+        bottom:0;
+        left:0;
+        right:0;
+        height:65px;
+        padding:7px;
+        border-right:0;
+        border-top:1px solid var(--border);
+        z-index:50;
+        flex-direction:row;
+    }
+
+    .brand,
+    .sidebar-bottom{
+        display:none;
+    }
+
+    .nav{
+        width:100%;
+        flex-direction:row;
+        justify-content:space-around;
+    }
+
+    .nav-btn{
+        width:auto;
+        flex:1;
+        justify-content:center;
+    }
+
+    .main{
+        height:calc(100vh - 65px);
+    }
+
+    .topbar{
+        padding:0 15px;
+    }
+
+    .page{
+        padding:14px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .chat-layout,
+    .community-layout{
+        grid-template-columns:1fr;
+    }
+
+    .friend-panel,
+    .community-list-panel{
+        height:190px;
+    }
+
+    .chat-panel,
+    .community-chat{
+        min-height:400px;
+    }
+
+    .community-top{
+        align-items:flex-start;
+        gap:10px;
+    }
+
+    .community-layout{
+        height:auto;
+    }
+
+    .message-bubble{
+        max-width:82%;
+    }
+}
+</style>
 </head>
-
 
 <body>
 
-    <!-- Animated background -->
+<div class="bg">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
+</div>
 
-    <div class="circle circle1"></div>
+<!-- ================= AUTH ================= -->
 
-    <div class="circle circle2"></div>
+<div id="authScreen">
 
-    <div class="circle circle3"></div>
-
-
-    <!-- Navigation -->
-
-    <nav>
+    <div class="auth-card">
 
         <div class="logo">
-            Connect<span>X</span>
+            <div class="logo-mark">CX</div>
+            <div class="logo-text">ConnectX</div>
         </div>
 
-    </nav>
-
-
-    <!-- Main section -->
-
-    <section class="hero">
-
-        <div class="hero-text">
-
-            <div class="badge">
-                ✦ A new way to communicate
-            </div>
-
-            <h1>
-                Connect.<br>
-                <span>Communicate.</span>
-            </h1>
-
-            <p class="description">
-                Meet people, build communities and have
-                meaningful conversations — all in one place.
-            </p>
-
-            <div class="hero-buttons">
-
-                <button class="signup">
-                    CREATE ACCOUNT →
-                </button>
-
-                <button class="login">
-                    I HAVE AN ACCOUNT
-                </button>
-
-            </div>
-
+        <div class="auth-subtitle">
+            Connect. Communicate. Belong.
         </div>
 
+        <div class="tabs">
+            <button class="tab active" id="loginTab">Login</button>
+            <button class="tab" id="signupTab">Create account</button>
+        </div>
 
-        <!-- Chat preview -->
+        <form id="loginForm">
 
-        <div class="preview">
+            <div class="input-group">
+                <label>Email</label>
+                <input
+                    id="loginEmail"
+                    class="input"
+                    type="email"
+                    placeholder="you@example.com"
+                    required
+                >
+            </div>
 
-            <div class="preview-title">
+            <div class="input-group">
+                <label>Password</label>
+                <input
+                    id="loginPassword"
+                    class="input"
+                    type="password"
+                    placeholder="Your password"
+                    required
+                >
+            </div>
 
-                💬 Messages
+            <button class="primary-btn" type="submit">
+                Enter ConnectX
+            </button>
 
-                <div class="online">
-                    ● 24 friends online
+        </form>
+
+        <form id="signupForm" style="display:none;">
+
+            <div class="input-group">
+                <label>Username</label>
+                <input
+                    id="signupUsername"
+                    class="input"
+                    type="text"
+                    placeholder="Choose a username"
+                    maxlength="30"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label>Email</label>
+                <input
+                    id="signupEmail"
+                    class="input"
+                    type="email"
+                    placeholder="you@example.com"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input
+                    id="signupPassword"
+                    class="input"
+                    type="password"
+                    placeholder="Create a password"
+                    required
+                >
+            </div>
+
+            <button class="primary-btn" type="submit">
+                Create my account
+            </button>
+
+        </form>
+
+        <div id="authMessage" class="auth-message"></div>
+
+    </div>
+</div>
+
+
+<!-- ================= APP ================= -->
+
+<div id="app">
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="logo-mark">CX</div>
+            <span>ConnectX</span>
+        </div>
+
+        <nav class="nav">
+
+            <button class="nav-btn active" id="navHome">
+                <span class="nav-icon">⌂</span>
+                <span>Home</span>
+            </button>
+
+            <button class="nav-btn" id="navChats">
+                <span class="nav-icon">◉</span>
+                <span>Chats</span>
+            </button>
+
+            <button class="nav-btn" id="navRequests">
+                <span class="nav-icon">♧</span>
+                <span>Requests</span>
+            </button>
+
+            <button class="nav-btn" id="navCommunities">
+                <span class="nav-icon">◈</span>
+                <span>Communities</span>
+            </button>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="user-mini">
+
+                <div class="avatar" id="miniAvatar">
+                    ?
+                </div>
+
+                <div>
+                    <div class="user-mini-name" id="miniName">
+                        Loading...
+                    </div>
+
+                    <div class="user-mini-status">
+                        ● Online
+                    </div>
                 </div>
 
             </div>
 
-            <div class="message received">
-                Hey! Did you see the new community?
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="topbar-title" id="topbarTitle">
+                Home
             </div>
 
-            <div class="message sent">
-                Yeah! It looks awesome 🔥
+            <div class="topbar-user">
+                <span>●</span>
+                <span id="topbarUser">Loading...</span>
             </div>
 
-            <div class="message received">
-                Wanna join?
+        </header>
+
+
+        <div class="pages">
+
+
+            <!-- ================= HOME ================= -->
+
+            <section class="page active" id="page-home">
+
+                <div class="hero">
+
+                    <h1>
+                        Welcome to <span>ConnectX</span>.
+                    </h1>
+
+                    <p>
+                        A communication space built for real conversations,
+                        friendships and communities.
+                    </p>
+
+                </div>
+
+                <div class="stats">
+
+                    <div class="stat">
+                        <div class="stat-value" id="homeFriendCount">0</div>
+                        <div class="stat-label">FRIENDS</div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="stat-value" id="homeRequestCount">0</div>
+                        <div class="stat-label">REQUESTS</div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="stat-value" id="homeCommunityCount">0</div>
+                        <div class="stat-label">COMMUNITIES</div>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= CHATS ================= -->
+
+            <section class="page" id="page-chats">
+
+                <div class="chat-layout">
+
+                    <div class="panel friend-panel">
+
+                        <div class="panel-header">
+                            <div>
+                                <div class="panel-title">
+                                    Chats
+                                </div>
+                                <div class="panel-sub">
+                                    Your conversations
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="friend-list"
+                            id="friendList"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="panel chat-panel">
+
+                        <div class="chat-header">
+
+                            <div
+                                class="avatar"
+                                id="chatAvatar"
+                            >
+                                ?
+                            </div>
+
+                            <div class="chat-header-info">
+
+                                <div
+                                    class="chat-header-name"
+                                    id="chatName"
+                                >
+                                    Select a friend
+                                </div>
+
+                                <div
+                                    class="chat-header-status"
+                                    id="chatStatus"
+                                >
+                                    —
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="messages"
+                            id="messages"
+                        >
+
+                            <div class="empty-chat">
+
+                                <div class="empty-icon">
+                                    💬
+                                </div>
+
+                                <div>
+                                    Select a friend to start chatting.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="composer"
+                            id="directComposer"
+                            style="display:none;position:relative;"
+                        >
+
+                            <div
+                                class="emoji-panel"
+                                id="directEmojiPanel"
+                            ></div>
+
+                            <div class="composer-inner">
+
+                                <button
+                                    class="icon-btn"
+                                    id="directEmojiBtn"
+                                    type="button"
+                                >
+                                    😊
+                                </button>
+
+                                <button
+                                    class="icon-btn"
+                                    id="directFileBtn"
+                                    type="button"
+                                >
+                                    ＋
+                                </button>
+
+                                <input
+                                    id="directFileInput"
+                                    type="file"
+                                    accept="image/*,video/*,.pdf,.txt,.doc,.docx"
+                                    style="display:none;"
+                                >
+
+                                <span
+                                    class="file-name"
+                                    id="directFileName"
+                                ></span>
+
+                                <input
+                                    id="messageInput"
+                                    class="message-input"
+                                    placeholder="Write a message..."
+                                    autocomplete="off"
+                                >
+
+                                <button
+                                    class="send-btn"
+                                    id="sendMessageBtn"
+                                    type="button"
+                                >
+                                    ➤
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= REQUESTS ================= -->
+
+            <section class="page" id="page-requests">
+
+                <div class="request-top">
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <div>
+                                <div class="panel-title">
+                                    Send a friend request
+                                </div>
+
+                                <div class="panel-sub">
+                                    Enter someone's ConnectX username
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div style="padding:16px;">
+
+                            <div class="request-box">
+
+                                <input
+                                    id="friendUsernameInput"
+                                    class="input"
+                                    placeholder="Username"
+                                >
+
+                                <button
+                                    class="small-btn"
+                                    id="sendRequestBtn"
+                                >
+                                    Send
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel" style="max-width:700px;">
+
+                    <div class="panel-header">
+
+                        <div>
+                            <div class="panel-title">
+                                Requests
+                            </div>
+
+                            <div class="panel-sub">
+                                People who want to connect
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="request-list"
+                        id="requestList"
+                        style="padding:10px;"
+                    ></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= COMMUNITIES ================= -->
+
+            <section
+                class="page community-page"
+                id="page-communities"
+            >
+
+                <div class="community-top">
+
+                    <div class="community-heading">
+
+                        <h2>Communities</h2>
+
+                        <p>
+                            Create your own space and communicate together.
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="create-btn"
+                        id="createCommunityBtn"
+                    >
+                        ＋ Create
+                    </button>
+
+                </div>
+
+
+                <div class="community-layout">
+
+
+                    <!-- COMMUNITY LIST -->
+
+                    <div class="panel community-list-panel">
+
+                        <div class="panel-header">
+
+                            <div>
+                                <div class="panel-title">
+                                    Your communities
+                                </div>
+
+                                <div class="panel-sub">
+                                    Only communities you belong to
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div
+                            class="community-list"
+                            id="communityList"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- COMMUNITY CHAT -->
+
+                    <div class="panel community-chat">
+
+                        <div class="community-header">
+
+                            <div
+                                class="avatar"
+                                id="communityAvatar"
+                            >
+                                ◈
+                            </div>
+
+                            <div class="community-header-info">
+
+                                <div
+                                    class="community-header-name"
+                                    id="communityName"
+                                >
+                                    Select a community
+                                </div>
+
+                                <div
+                                    class="community-header-status"
+                                    id="communityStatus"
+                                >
+                                    —
+                                </div>
+
+                            </div>
+
+                            <div class="community-actions">
+
+                                <span
+                                    class="privacy-pill"
+                                    id="communityPrivacy"
+                                    style="display:none;"
+                                >
+                                    🔒 Private names
+                                </span>
+
+                                <button
+                                    class="delete-btn"
+                                    id="deleteCommunityBtn"
+                                    style="display:none;"
+                                    title="Delete community"
+                                >
+                                    🗑
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="community-messages"
+                            id="communityMessages"
+                        >
+
+                            <div class="empty-chat">
+
+                                <div class="empty-icon">
+                                    ◈
+                                </div>
+
+                                <div>
+                                    Select a community to open the conversation.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="composer"
+                            id="communityComposer"
+                            style="display:none;position:relative;"
+                        >
+
+                            <div
+                                class="emoji-panel"
+                                id="communityEmojiPanel"
+                            ></div>
+
+                            <div class="composer-inner">
+
+                                <button
+                                    class="icon-btn"
+                                    id="communityEmojiBtn"
+                                    type="button"
+                                >
+                                    😊
+                                </button>
+
+                                <button
+                                    class="icon-btn"
+                                    id="communityFileBtn"
+                                    type="button"
+                                >
+                                    ＋
+                                </button>
+
+                                <input
+                                    id="communityFileInput"
+                                    type="file"
+                                    accept="image/*,video/*,.gif"
+                                    style="display:none;"
+                                >
+
+                                <span
+                                    class="file-name"
+                                    id="communityFileName"
+                                ></span>
+
+                                <input
+                                    id="communityMessageInput"
+                                    class="message-input"
+                                    placeholder="Message the community..."
+                                    autocomplete="off"
+                                >
+
+                                <button
+                                    class="send-btn"
+                                    id="sendCommunityBtn"
+                                    type="button"
+                                >
+                                    ➤
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+</div>
+
+
+<!-- ================= CREATE COMMUNITY MODAL ================= -->
+
+<div
+    class="modal"
+    id="createCommunityModal"
+>
+
+    <div class="modal-card">
+
+        <div class="modal-head">
+
+            <h3>Create community</h3>
+
+            <button
+                class="close-btn"
+                id="closeCommunityModal"
+            >
+                ✕
+            </button>
+
+        </div>
+
+        <div class="input-group">
+
+            <label>Community name</label>
+
+            <input
+                id="newCommunityName"
+                class="input"
+                placeholder="e.g. Football Fans"
+                maxlength="50"
+            >
+
+        </div>
+
+        <div class="input-group">
+
+            <label>Description</label>
+
+            <input
+                id="newCommunityDescription"
+                class="input"
+                placeholder="What is this community about?"
+                maxlength="150"
+            >
+
+        </div>
+
+        <div class="modal-actions">
+
+            <button
+                class="cancel-btn"
+                id="cancelCommunityBtn"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="primary-btn"
+                id="saveCommunityBtn"
+            >
+                Create community
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
+<script>
+
+/* ============================================================
+   SUPABASE
+============================================================ */
+
+const SUPABASE_URL =
+    "https://wiweppyzevhlimxjowlm.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable__BYlLl9L4xnjn7UYtBFXSA_MoxuRG-7";
+
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+/* ============================================================
+   STATE
+============================================================ */
+
+let currentUser = null;
+let currentProfile = null;
+
+let currentChatUser = null;
+let currentCommunity = null;
+
+let friends = [];
+let requests = [];
+let communities = [];
+
+let messageChannel = null;
+let requestChannel = null;
+
+let communityMessageChannel = null;
+let communityChannel = null;
+
+
+/* ============================================================
+   HELPERS
+============================================================ */
+
+function $(id){
+    return document.getElementById(id);
+}
+
+function escapeHTML(value){
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+function initials(name){
+    if(!name) return "?";
+
+    return name
+        .trim()
+        .split(/\s+/)
+        .slice(0,2)
+        .map(x => x[0])
+        .join("")
+        .toUpperCase();
+}
+
+function showToast(message){
+
+    const toast = $("toast");
+
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    clearTimeout(window.toastTimer);
+
+    window.toastTimer = setTimeout(()=>{
+        toast.classList.remove("show");
+    },2800);
+}
+
+
+/* ============================================================
+   AUTH TABS
+============================================================ */
+
+$("loginTab").onclick = ()=>{
+
+    $("loginTab").classList.add("active");
+    $("signupTab").classList.remove("active");
+
+    $("loginForm").style.display = "block";
+    $("signupForm").style.display = "none";
+
+    $("authMessage").textContent = "";
+};
+
+$("signupTab").onclick = ()=>{
+
+    $("signupTab").classList.add("active");
+    $("loginTab").classList.remove("active");
+
+    $("signupForm").style.display = "block";
+    $("loginForm").style.display = "none";
+
+    $("authMessage").textContent = "";
+};
+
+
+/* ============================================================
+   LOGIN
+============================================================ */
+
+$("loginForm").addEventListener("submit", async e => {
+
+    e.preventDefault();
+
+    const email =
+        $("loginEmail").value.trim();
+
+    const password =
+        $("loginPassword").value;
+
+    $("authMessage").textContent =
+        "Signing you in...";
+
+    const {data,error} =
+        await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+        });
+
+    if(error){
+
+        $("authMessage").textContent =
+            error.message;
+
+        return;
+    }
+
+    currentUser = data.user;
+
+    await startApp();
+});
+
+
+/* ============================================================
+   SIGNUP
+============================================================ */
+
+$("signupForm").addEventListener("submit", async e => {
+
+    e.preventDefault();
+
+    const username =
+        $("signupUsername").value.trim();
+
+    const email =
+        $("signupEmail").value.trim();
+
+    const password =
+        $("signupPassword").value;
+
+    if(username.length < 3){
+
+        $("authMessage").textContent =
+            "Username must be at least 3 characters.";
+
+        return;
+    }
+
+    $("authMessage").textContent =
+        "Creating your account...";
+
+    const {data,error} =
+        await supabaseClient.auth.signUp({
+            email,
+            password
+        });
+
+    if(error){
+
+        $("authMessage").textContent =
+            error.message;
+
+        return;
+    }
+
+    if(data.user){
+
+        const {error:profileError} =
+            await supabaseClient
+                .from("profiles")
+                .insert({
+                    id:data.user.id,
+                    username:username
+                });
+
+        if(profileError){
+
+            $("authMessage").textContent =
+                profileError.message;
+
+            return;
+        }
+    }
+
+    $("authMessage").style.color =
+        "#44e59a";
+
+    $("authMessage").textContent =
+        "Account created. Check your email if confirmation is required.";
+
+});
+
+
+/* ============================================================
+   START APP
+============================================================ */
+
+async function startApp(){
+
+    if(!currentUser){
+
+        const {
+            data:{user}
+        } =
+        await supabaseClient.auth.getUser();
+
+        currentUser = user;
+    }
+
+    if(!currentUser) return;
+
+    $("authScreen").style.display = "none";
+    $("app").style.display = "block";
+
+    await loadProfile();
+    await loadFriends();
+    await loadRequests();
+    await loadCommunities();
+
+    setupRealtime();
+
+    showPage("home");
+}
+
+
+/* ============================================================
+   PROFILE
+============================================================ */
+
+async function loadProfile(){
+
+    const {data,error} =
+        await supabaseClient
+            .from("profiles")
+            .select("*")
+            .eq("id",currentUser.id)
+            .single();
+
+    if(error){
+
+        console.error(error);
+
+        return;
+    }
+
+    currentProfile = data;
+
+    const username =
+        data.username || "User";
+
+    $("miniName").textContent =
+        username;
+
+    $("topbarUser").textContent =
+        username;
+
+    $("miniAvatar").textContent =
+        initials(username);
+}
+
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+
+const navMap = {
+    home:{
+        page:"page-home",
+        nav:"navHome",
+        title:"Home"
+    },
+    chats:{
+        page:"page-chats",
+        nav:"navChats",
+        title:"Chats"
+    },
+    requests:{
+        page:"page-requests",
+        nav:"navRequests",
+        title:"Friend requests"
+    },
+    communities:{
+        page:"page-communities",
+        nav:"navCommunities",
+        title:"Communities"
+    }
+};
+
+function showPage(name){
+
+    Object.values(navMap).forEach(item=>{
+
+        $(item.page).classList.remove("active");
+        $(item.nav).classList.remove("active");
+
+    });
+
+    const item = navMap[name];
+
+    $(item.page).classList.add("active");
+    $(item.nav).classList.add("active");
+
+    $("topbarTitle").textContent =
+        item.title;
+}
+
+$("navHome").onclick =
+    ()=>showPage("home");
+
+$("navChats").onclick =
+    ()=>showPage("chats");
+
+$("navRequests").onclick =
+    ()=>showPage("requests");
+
+$("navCommunities").onclick =
+    ()=>showPage("communities");
+
+
+/* ============================================================
+   FRIENDS
+============================================================ */
+
+async function loadFriends(){
+
+    const {data,error} =
+        await supabaseClient
+            .from("friend_requests")
+            .select("*")
+            .or(
+                `sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`
+            )
+            .eq("status","accepted");
+
+    if(error){
+
+        console.error(error);
+        return;
+    }
+
+    const ids = [];
+
+    for(const row of data || []){
+
+        const id =
+            row.sender_id === currentUser.id
+                ? row.receiver_id
+                : row.sender_id;
+
+        if(id && !ids.includes(id)){
+            ids.push(id);
+        }
+    }
+
+    if(!ids.length){
+
+        friends = [];
+        renderFriends();
+        updateStats();
+        return;
+    }
+
+    const {data:profiles,error:profileError} =
+        await supabaseClient
+            .from("profiles")
+            .select("*")
+            .in("id",ids);
+
+    if(profileError){
+
+        console.error(profileError);
+        return;
+    }
+
+    friends = profiles || [];
+
+    renderFriends();
+    updateStats();
+}
+
+
+function renderFriends(){
+
+    const list = $("friendList");
+
+    if(!friends.length){
+
+        list.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">👥</div>
+                <div class="empty-state-title">
+                    No friends yet
+                </div>
+                <div class="empty-state-text">
+                    Send a request to start connecting.
+                </div>
+            </div>
+        `;
+
+        return;
+    }
+
+    list.innerHTML = friends.map(friend => `
+
+        <div
+            class="friend-card ${currentChatUser?.id === friend.id ? "active":""}"
+            data-friend-id="${friend.id}"
+        >
+
+            <div class="avatar">
+                ${escapeHTML(initials(friend.username))}
             </div>
 
-            <div class="message sent">
-                Of course! 😎
-            </div>
+            <div class="friend-info">
 
-            <div class="message received">
-                Let's gooo 🚀
+                <div class="friend-name">
+                    ${escapeHTML(friend.username)}
+                </div>
+
+                <div class="friend-status">
+                    ConnectX user
+                </div>
+
             </div>
 
         </div>
 
-    </section>
+    `).join("");
+}
 
 
-    <!-- =========================
-         PARTICLE TRAIL JAVASCRIPT
-    ========================= -->
+$("friendList").addEventListener(
+    "click",
+    async e => {
 
-    <script>
+        const card =
+            e.target.closest(".friend-card");
 
-        let mouseX = 0;
-        let mouseY = 0;
+        if(!card) return;
 
-        let lastX = 0;
-        let lastY = 0;
+        const id =
+            card.dataset.friendId;
 
+        const friend =
+            friends.find(
+                x => String(x.id) === String(id)
+            );
 
-        document.addEventListener(
-            "mousemove",
-            function(event) {
-
-                mouseX = event.clientX;
-                mouseY = event.clientY;
-
-
-                /* Only create particles
-                   when the mouse actually moves */
-
-                const distance = Math.sqrt(
-                    Math.pow(mouseX - lastX, 2) +
-                    Math.pow(mouseY - lastY, 2)
-                );
+        if(friend){
+            await openChat(friend);
+        }
+    }
+);
 
 
-                if (distance > 8) {
+/* ============================================================
+   OPEN DIRECT CHAT
+============================================================ */
 
-                    createParticle(
-                        mouseX,
-                        mouseY
-                    );
+async function openChat(friend){
 
-                    lastX = mouseX;
-                    lastY = mouseY;
-                }
+    currentChatUser = friend;
 
-            }
+    renderFriends();
+
+    $("chatAvatar").textContent =
+        initials(friend.username);
+
+    $("chatName").textContent =
+        friend.username;
+
+    $("chatStatus").textContent =
+        "● Connected";
+
+    $("directComposer").style.display =
+        "block";
+
+    await loadMessages();
+
+    subscribeToMessages();
+}
+
+
+/* ============================================================
+   LOAD DIRECT MESSAGES
+============================================================ */
+
+async function loadMessages(){
+
+    if(!currentChatUser) return;
+
+    const {data,error} =
+        await supabaseClient
+            .from("messages")
+            .select("*")
+            .or(
+                `and(sender_id.eq.${currentUser.id},receiver_id.eq.${currentChatUser.id}),and(sender_id.eq.${currentChatUser.id},receiver_id.eq.${currentUser.id})`
+            )
+            .order("created_at",{ascending:true});
+
+    if(error){
+
+        console.error(error);
+        return;
+    }
+
+    renderMessages(data || []);
+}
+
+
+function renderMessages(messages){
+
+    const box = $("messages");
+
+    if(!messages.length){
+
+        box.innerHTML = `
+            <div class="empty-chat">
+                <div class="empty-icon">💬</div>
+                <div>
+                    No messages yet. Say hi.
+                </div>
+            </div>
+        `;
+
+        return;
+    }
+
+    box.innerHTML =
+        messages.map(renderDirectMessage).join("");
+
+    box.scrollTop =
+        box.scrollHeight;
+}
+
+
+function renderDirectMessage(msg){
+
+    const mine =
+        msg.sender_id === currentUser.id;
+
+    const time =
+        msg.created_at
+            ? new Date(msg.created_at)
+                .toLocaleTimeString([],{
+                    hour:"2-digit",
+                    minute:"2-digit"
+                })
+            : "";
+
+    return `
+
+        <div class="message-row ${mine ? "mine":""}">
+
+            <div class="message-bubble">
+
+                <div class="message-author">
+                    ${mine ? "You" : escapeHTML(currentChatUser?.username || "Friend")}
+                </div>
+
+                <div>
+                    ${escapeHTML(msg.content)}
+                </div>
+
+                <div class="message-time">
+                    ${time}
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+}
+
+
+/* ============================================================
+   SEND DIRECT MESSAGE
+============================================================ */
+
+async function sendMessage(){
+
+    if(!currentUser || !currentChatUser)
+        return;
+
+    const input =
+        $("messageInput");
+
+    const content =
+        input.value.trim();
+
+    if(!content)
+        return;
+
+    input.value = "";
+
+    const {error} =
+        await supabaseClient
+            .from("messages")
+            .insert({
+                sender_id:currentUser.id,
+                receiver_id:currentChatUser.id,
+                content:content
+            });
+
+    if(error){
+
+        console.error(error);
+
+        showToast(error.message);
+
+        input.value = content;
+
+        return;
+    }
+}
+
+$("sendMessageBtn").onclick =
+    sendMessage;
+
+$("messageInput").addEventListener(
+    "keydown",
+    e => {
+
+        if(e.key === "Enter" && !e.shiftKey){
+
+            e.preventDefault();
+
+            sendMessage();
+        }
+    }
+);
+
+
+/* ============================================================
+   REALTIME DIRECT MESSAGES
+============================================================ */
+
+function subscribeToMessages(){
+
+    if(messageChannel){
+
+        supabaseClient.removeChannel(
+            messageChannel
         );
+    }
 
-
-        function createParticle(x, y) {
-
-            const particle =
-                document.createElement("div");
-
-
-            particle.classList.add(
-                "particle"
-            );
-
-
-            /* Random size */
-
-            const size =
-                Math.random() * 5 + 2;
-
-
-            particle.style.width =
-                size + "px";
-
-            particle.style.height =
-                size + "px";
-
-
-            /* Random movement */
-
-            const moveX =
-                (Math.random() - 0.5) * 60;
-
-            const moveY =
-                (Math.random() - 0.5) * 60;
-
-
-            particle.style.setProperty(
-                "--moveX",
-                moveX + "px"
-            );
-
-
-            particle.style.setProperty(
-                "--moveY",
-                moveY + "px"
-            );
-
-
-            particle.style.left =
-                x + "px";
-
-            particle.style.top =
-                y + "px";
-
-
-            document.body.appendChild(
-                particle
-            );
-
-
-            /* Delete after animation */
-
-            setTimeout(
-                function() {
-
-                    particle.remove();
-
+    messageChannel =
+        supabaseClient
+            .channel(
+                "direct-messages-" +
+                currentUser.id +
+                "-" +
+                currentChatUser.id
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event:"INSERT",
+                    schema:"public",
+                    table:"messages"
                 },
-                800
-            );
+                payload => {
 
+                    const msg =
+                        payload.new;
+
+                    if(
+                        !currentChatUser ||
+                        !msg
+                    ) return;
+
+                    const relevant =
+                        (
+                            msg.sender_id === currentUser.id &&
+                            msg.receiver_id === currentChatUser.id
+                        ) ||
+                        (
+                            msg.sender_id === currentChatUser.id &&
+                            msg.receiver_id === currentUser.id
+                        );
+
+                    if(!relevant)
+                        return;
+
+                    addMessageRealtime(msg);
+                }
+            )
+            .subscribe();
+}
+
+
+function addMessageRealtime(msg){
+
+    if(
+        !currentChatUser
+    ) return;
+
+    const box =
+        $("messages");
+
+    const empty =
+        box.querySelector(".empty-chat");
+
+    if(empty){
+        empty.remove();
+    }
+
+    box.insertAdjacentHTML(
+        "beforeend",
+        renderDirectMessage(msg)
+    );
+
+    box.scrollTop =
+        box.scrollHeight;
+}
+
+
+/* ============================================================
+   REQUESTS
+============================================================ */
+
+async function loadRequests(){
+
+    const {data,error} =
+        await supabaseClient
+            .from("friend_requests")
+            .select("*")
+            .eq("receiver_id",currentUser.id)
+            .eq("status","pending")
+            .order("created_at",{ascending:false});
+
+    if(error){
+
+        console.error(error);
+        return;
+    }
+
+    requests = data || [];
+
+    renderRequests();
+    updateStats();
+}
+
+
+async function renderRequests(){
+
+    const list =
+        $("requestList");
+
+    if(!requests.length){
+
+        list.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">✦</div>
+                <div class="empty-state-title">
+                    No pending requests
+                </div>
+                <div class="empty-state-text">
+                    You're all caught up.
+                </div>
+            </div>
+        `;
+
+        return;
+    }
+
+    const ids =
+        requests.map(x => x.sender_id);
+
+    const {data:profiles} =
+        await supabaseClient
+            .from("profiles")
+            .select("*")
+            .in("id",ids);
+
+    const profileMap = {};
+
+    (profiles || []).forEach(p=>{
+        profileMap[p.id] = p;
+    });
+
+    list.innerHTML =
+        requests.map(req => {
+
+            const sender =
+                profileMap[req.sender_id];
+
+            return `
+
+                <div class="request-card">
+
+                    <div style="display:flex;align-items:center;gap:10px;">
+
+                        <div class="avatar">
+                            ${escapeHTML(initials(sender?.username))}
+                        </div>
+
+                        <div>
+
+                            <div style="font-size:13px;font-weight:800;">
+                                ${escapeHTML(sender?.username || "User")}
+                            </div>
+
+                            <div style="font-size:10px;color:#777e93;">
+                                Wants to connect
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div style="display:flex;gap:6px;">
+
+                        <button
+                            class="small-btn"
+                            onclick="acceptRequest('${req.id}')"
+                        >
+                            Accept
+                        </button>
+
+                        <button
+                            class="cancel-btn"
+                            style="padding:7px 10px;"
+                            onclick="rejectRequest('${req.id}')"
+                        >
+                            Decline
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+        }).join("");
+}
+
+
+$("sendRequestBtn").onclick =
+    sendFriendRequest;
+
+$("friendUsernameInput").addEventListener(
+    "keydown",
+    e => {
+
+        if(e.key === "Enter"){
+            sendFriendRequest();
+        }
+    }
+);
+
+
+async function sendFriendRequest(){
+
+    const username =
+        $("friendUsernameInput")
+            .value
+            .trim();
+
+    if(!username)
+        return;
+
+    if(
+        username.toLowerCase() ===
+        currentProfile.username.toLowerCase()
+    ){
+
+        showToast("You can't add yourself.");
+
+        return;
+    }
+
+    const {data:userProfile,error} =
+        await supabaseClient
+            .from("profiles")
+            .select("id,username")
+            .ilike("username",username)
+            .maybeSingle();
+
+    if(error){
+
+        showToast(error.message);
+        return;
+    }
+
+    if(!userProfile){
+
+        showToast("Username not found.");
+        return;
+    }
+
+    const {data:existing} =
+        await supabaseClient
+            .from("friend_requests")
+            .select("*")
+            .or(
+                `and(sender_id.eq.${currentUser.id},receiver_id.eq.${userProfile.id}),and(sender_id.eq.${userProfile.id},receiver_id.eq.${currentUser.id})`
+            )
+            .limit(1);
+
+    if(existing && existing.length){
+
+        showToast("A connection already exists.");
+
+        return;
+    }
+
+    const {error:insertError} =
+        await supabaseClient
+            .from("friend_requests")
+            .insert({
+                sender_id:currentUser.id,
+                receiver_id:userProfile.id,
+                status:"pending"
+            });
+
+    if(insertError){
+
+        showToast(insertError.message);
+
+        return;
+    }
+
+    $("friendUsernameInput").value = "";
+
+    showToast("Friend request sent.");
+}
+
+
+window.acceptRequest =
+    async function(id){
+
+        const {error} =
+            await supabaseClient
+                .from("friend_requests")
+                .update({
+                    status:"accepted"
+                })
+                .eq("id",id);
+
+        if(error){
+
+            showToast(error.message);
+            return;
         }
 
-    </script>
+        showToast("Request accepted.");
+
+        await loadRequests();
+        await loadFriends();
+    };
+
+
+window.rejectRequest =
+    async function(id){
+
+        const {error} =
+            await supabaseClient
+                .from("friend_requests")
+                .update({
+                    status:"rejected"
+                })
+                .eq("id",id);
+
+        if(error){
+
+            showToast(error.message);
+            return;
+        }
+
+        showToast("Request declined.");
+
+        await loadRequests();
+    };
+
+
+/* ============================================================
+   COMMUNITIES
+============================================================ */
+
+async function loadCommunities(){
+
+    const {data,error} =
+        await supabaseClient
+            .from("communities")
+            .select("*")
+            .order("created_at",{ascending:false});
+
+    if(error){
+
+        console.error(error);
+
+        return;
+    }
+
+    const allCommunities =
+        data || [];
+
+    if(!allCommunities.length){
+
+        communities = [];
+
+        renderCommunities();
+        updateStats();
+
+        return;
+    }
+
+    const ids =
+        allCommunities.map(x=>x.id);
+
+    const {data:members,error:memberError} =
+        await supabaseClient
+            .from("community_members")
+            .select("community_id,user_id")
+            .in("community_id",ids)
+            .eq("user_id",currentUser.id);
+
+    if(memberError){
+
+        console.error(memberError);
+
+        return;
+    }
+
+    const memberIds =
+        new Set(
+            (members || [])
+                .map(x=>x.community_id)
+        );
+
+    communities =
+        allCommunities.filter(
+            c =>
+                memberIds.has(c.id) ||
+                c.owner_id === currentUser.id
+        );
+
+    renderCommunities();
+    updateStats();
+}
+
+
+function renderCommunities(){
+
+    const list =
+        $("communityList");
+
+    if(!communities.length){
+
+        list.innerHTML = `
+            <div class="empty-state">
+
+                <div class="empty-state-icon">
+                    ◈
+                </div>
+
+                <div class="empty-state-title">
+                    No communities yet
+                </div>
+
+                <div class="empty-state-text">
+                    Create your first community.
+                </div>
+
+            </div>
+        `;
+
+        return;
+    }
+
+    list.innerHTML =
+        communities.map(c=>`
+
+            <div
+                class="community-card ${currentCommunity?.id === c.id ? "active":""}"
+                data-community-id="${c.id}"
+            >
+
+                <div class="avatar">
+                    ${escapeHTML(initials(c.name))}
+                </div>
+
+                <div class="community-card-info">
+
+                    <div class="community-card-name">
+                        ${escapeHTML(c.name)}
+                    </div>
+
+                    <div class="community-card-desc">
+                        ${escapeHTML(c.description || "Community")}
+                    </div>
+
+                </div>
+
+            </div>
+
+        `).join("");
+}
+
+
+/* ============================================================
+   COMMUNITY CARD CLICK
+============================================================ */
+
+$("communityList").addEventListener(
+    "click",
+    async function(e){
+
+        const card =
+            e.target.closest(".community-card");
+
+        if(!card)
+            return;
+
+        const communityId =
+            card.dataset.communityId;
+
+        if(!communityId)
+            return;
+
+        const community =
+            communities.find(
+                c =>
+                    String(c.id) ===
+                    String(communityId)
+            );
+
+        if(!community)
+            return;
+
+        await openCommunity(community);
+    }
+);
+
+
+/* ============================================================
+   OPEN COMMUNITY
+============================================================ */
+
+async function openCommunity(community){
+
+    currentCommunity =
+        community;
+
+    renderCommunities();
+
+    $("communityAvatar").textContent =
+        initials(community.name);
+
+    $("communityName").textContent =
+        community.name;
+
+    $("communityStatus").textContent =
+        community.description ||
+        "Community conversation";
+
+    $("communityPrivacy").style.display =
+        "inline-block";
+
+    if(
+        community.owner_id ===
+        currentUser.id
+    ){
+
+        $("deleteCommunityBtn")
+            .style.display =
+            "block";
+
+    }else{
+
+        $("deleteCommunityBtn")
+            .style.display =
+            "none";
+    }
+
+    $("communityComposer")
+        .style.display =
+        "block";
+
+    $("communityMessageInput")
+        .placeholder =
+        "Message the community...";
+
+    await loadCommunityMessages();
+
+    subscribeToCommunityMessages();
+}
+
+
+/* ============================================================
+   LOAD COMMUNITY MESSAGES
+============================================================ */
+
+async function loadCommunityMessages(){
+
+    if(!currentCommunity)
+        return;
+
+    const {data,error} =
+        await supabaseClient
+            .from("community_messages")
+            .select("*")
+            .eq(
+                "community_id",
+                currentCommunity.id
+            )
+            .order("created_at",{
+                ascending:true
+            });
+
+    if(error){
+
+        console.error(error);
+        return;
+    }
+
+    renderCommunityMessages(
+        data || []
+    );
+}
+
+
+/* ============================================================
+   COMMUNITY MESSAGE UI
+   PRIVATE NAMES
+============================================================ */
+
+function renderCommunityMessages(messages){
+
+    const box =
+        $("communityMessages");
+
+    if(!messages.length){
+
+        box.innerHTML = `
+            <div class="empty-chat">
+
+                <div class="empty-icon">
+                    🔒
+                </div>
+
+                <div>
+                    No messages yet.
+                </div>
+
+                <div style="font-size:10px;color:#666d82;margin-top:5px;">
+                    Community member names are private.
+                </div>
+
+            </div>
+        `;
+
+        return;
+    }
+
+    box.innerHTML =
+        messages
+            .map(renderCommunityMessage)
+            .join("");
+
+    box.scrollTop =
+        box.scrollHeight;
+}
+
+
+function renderCommunityMessage(msg){
+
+    const mine =
+        msg.sender_id === currentUser.id;
+
+    const time =
+        msg.created_at
+            ? new Date(msg.created_at)
+                .toLocaleTimeString([],{
+                    hour:"2-digit",
+                    minute:"2-digit"
+                })
+            : "";
+
+    /*
+       PRIVACY:
+       Never display the sender's username here.
+       Only You / Member.
+    */
+
+    return `
+
+        <div
+            class="message-row community-row ${mine ? "mine":""}"
+        >
+
+            <div class="message-bubble">
+
+                <div class="community-message-author">
+                    ${mine ? "You" : "Member"}
+                </div>
+
+                <div>
+                    ${escapeHTML(msg.content)}
+                </div>
+
+                <div class="message-time">
+                    ${time}
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+}
+
+
+/* ============================================================
+   SEND COMMUNITY MESSAGE
+============================================================ */
+
+async function sendCommunityMessage(){
+
+    if(
+        !currentUser ||
+        !currentCommunity
+    )
+        return;
+
+    const input =
+        $("communityMessageInput");
+
+    const content =
+        input.value.trim();
+
+    if(!content)
+        return;
+
+    /* Check community still exists */
+
+    const {data:existing,error:checkError} =
+        await supabaseClient
+            .from("communities")
+            .select("id")
+            .eq("id",currentCommunity.id)
+            .maybeSingle();
+
+    if(checkError){
+
+        showToast(checkError.message);
+
+        return;
+    }
+
+    if(!existing){
+
+        handleCommunityDeleted(
+            currentCommunity.id
+        );
+
+        return;
+    }
+
+    input.value = "";
+
+    const {error} =
+        await supabaseClient
+            .from("community_messages")
+            .insert({
+                community_id:currentCommunity.id,
+                sender_id:currentUser.id,
+                content:content
+            });
+
+    if(error){
+
+        console.error(error);
+
+        showToast(error.message);
+
+        input.value = content;
+    }
+}
+
+
+$("sendCommunityBtn").onclick =
+    sendCommunityMessage;
+
+$("communityMessageInput")
+    .addEventListener(
+        "keydown",
+        e => {
+
+            if(
+                e.key === "Enter" &&
+                !e.shiftKey
+            ){
+
+                e.preventDefault();
+
+                sendCommunityMessage();
+            }
+        }
+    );
+
+
+/* ============================================================
+   REALTIME COMMUNITY MESSAGES
+============================================================ */
+
+function subscribeToCommunityMessages(){
+
+    if(communityMessageChannel){
+
+        supabaseClient.removeChannel(
+            communityMessageChannel
+        );
+    }
+
+    if(!currentCommunity)
+        return;
+
+    communityMessageChannel =
+        supabaseClient
+            .channel(
+                "community-messages-" +
+                currentCommunity.id +
+                "-" +
+                Date.now()
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event:"INSERT",
+                    schema:"public",
+                    table:"community_messages",
+                    filter:
+                        `community_id=eq.${currentCommunity.id}`
+                },
+                payload => {
+
+                    if(
+                        !currentCommunity ||
+                        payload.new.community_id !==
+                        currentCommunity.id
+                    )
+                        return;
+
+                    addCommunityMessageRealtime(
+                        payload.new
+                    );
+                }
+            )
+            .subscribe(status => {
+
+                console.log(
+                    "Community realtime:",
+                    status
+                );
+            });
+}
+
+
+function addCommunityMessageRealtime(msg){
+
+    const box =
+        $("communityMessages");
+
+    const empty =
+        box.querySelector(".empty-chat");
+
+    if(empty){
+        empty.remove();
+    }
+
+    box.insertAdjacentHTML(
+        "beforeend",
+        renderCommunityMessage(msg)
+    );
+
+    box.scrollTop =
+        box.scrollHeight;
+}
+
+
+/* ============================================================
+   COMMUNITY CREATE MODAL
+============================================================ */
+
+$("createCommunityBtn").onclick =
+    ()=>{
+        $("createCommunityModal")
+            .classList.add("show");
+
+        $("newCommunityName").focus();
+    };
+
+function closeCommunityModal(){
+
+    $("createCommunityModal")
+        .classList.remove("show");
+
+    $("newCommunityName").value = "";
+    $("newCommunityDescription").value = "";
+}
+
+$("closeCommunityModal").onclick =
+    closeCommunityModal;
+
+$("cancelCommunityBtn").onclick =
+    closeCommunityModal;
+
+
+/* ============================================================
+   CREATE COMMUNITY
+============================================================ */
+
+$("saveCommunityBtn").onclick =
+    createCommunity;
+
+
+async function createCommunity(){
+
+    const name =
+        $("newCommunityName")
+            .value
+            .trim();
+
+    const description =
+        $("newCommunityDescription")
+            .value
+            .trim();
+
+    if(!name){
+
+        showToast(
+            "Enter a community name."
+        );
+
+        return;
+    }
+
+    const {data,error} =
+        await supabaseClient
+            .from("communities")
+            .insert({
+                name:name,
+                description:description,
+                owner_id:currentUser.id
+            })
+            .select()
+            .single();
+
+    if(error){
+
+        console.error(error);
+
+        showToast(error.message);
+
+        return;
+    }
+
+    const {error:memberError} =
+        await supabaseClient
+            .from("community_members")
+            .insert({
+                community_id:data.id,
+                user_id:currentUser.id
+            });
+
+    if(memberError){
+
+        console.error(memberError);
+
+        showToast(memberError.message);
+
+        return;
+    }
+
+    closeCommunityModal();
+
+    showToast(
+        "Community created."
+    );
+
+    await loadCommunities();
+
+    await openCommunity(data);
+}
+
+
+/* ============================================================
+   DELETE COMMUNITY
+============================================================ */
+
+$("deleteCommunityBtn").onclick =
+    deleteCurrentCommunity;
+
+
+async function deleteCurrentCommunity(){
+
+    if(!currentCommunity)
+        return;
+
+    if(
+        currentCommunity.owner_id !==
+        currentUser.id
+    ){
+
+        showToast(
+            "Only the owner can delete this community."
+        );
+
+        return;
+    }
+
+    const deletedId =
+        currentCommunity.id;
+
+    const confirmed =
+        confirm(
+            "Delete this community for everyone?"
+        );
+
+    if(!confirmed)
+        return;
+
+    const {error} =
+        await supabaseClient
+            .from("communities")
+            .delete()
+            .eq("id",deletedId)
+            .eq("owner_id",currentUser.id);
+
+    if(error){
+
+        console.error(error);
+
+        showToast(error.message);
+
+        return;
+    }
+
+    handleCommunityDeleted(
+        deletedId
+    );
+
+    showToast(
+        "Community deleted."
+    );
+}
+
+
+/* ============================================================
+   HANDLE COMMUNITY DELETION
+============================================================ */
+
+function handleCommunityDeleted(
+    deletedId
+){
+
+    communities =
+        communities.filter(
+            c =>
+                String(c.id) !==
+                String(deletedId)
+        );
+
+    if(
+        currentCommunity &&
+        String(currentCommunity.id) ===
+        String(deletedId)
+    ){
+
+        currentCommunity = null;
+
+        if(communityMessageChannel){
+
+            supabaseClient.removeChannel(
+                communityMessageChannel
+            );
+
+            communityMessageChannel =
+                null;
+        }
+
+        $("communityName").textContent =
+            "Community deleted";
+
+        $("communityStatus").textContent =
+            "This community no longer exists.";
+
+        $("communityAvatar").textContent =
+            "×";
+
+        $("communityPrivacy").style.display =
+            "none";
+
+        $("deleteCommunityBtn").style.display =
+            "none";
+
+        $("communityComposer").style.display =
+            "none";
+
+        $("communityMessages").innerHTML = `
+
+            <div class="empty-chat">
+
+                <div class="empty-icon">
+                    ×
+                </div>
+
+                <div>
+                    Community no longer exists.
+                </div>
+
+            </div>
+
+        `;
+    }
+
+    renderCommunities();
+    updateStats();
+}
+
+
+/* ============================================================
+   COMMUNITY REALTIME CREATE / UPDATE / DELETE
+============================================================ */
+
+function setupCommunityRealtime(){
+
+    if(communityChannel){
+
+        supabaseClient.removeChannel(
+            communityChannel
+        );
+    }
+
+    communityChannel =
+        supabaseClient
+            .channel(
+                "communities-live-" +
+                currentUser.id
+            )
+
+            .on(
+                "postgres_changes",
+                {
+                    event:"INSERT",
+                    schema:"public",
+                    table:"communities"
+                },
+                async payload => {
+
+                    await loadCommunities();
+                }
+            )
+
+            .on(
+                "postgres_changes",
+                {
+                    event:"UPDATE",
+                    schema:"public",
+                    table:"communities"
+                },
+                async payload => {
+
+                    await loadCommunities();
+
+                    if(
+                        currentCommunity &&
+                        currentCommunity.id ===
+                        payload.new.id
+                    ){
+
+                        currentCommunity =
+                            payload.new;
+
+                        await openCommunity(
+                            payload.new
+                        );
+                    }
+                }
+            )
+
+            .on(
+                "postgres_changes",
+                {
+                    event:"DELETE",
+                    schema:"public",
+                    table:"communities"
+                },
+                payload => {
+
+                    const deletedId =
+                        payload.old?.id;
+
+                    if(deletedId){
+
+                        handleCommunityDeleted(
+                            deletedId
+                        );
+                    }else{
+
+                        loadCommunities();
+                    }
+                }
+            )
+
+            .subscribe(status => {
+
+                console.log(
+                    "Community realtime:",
+                    status
+                );
+            });
+}
+
+
+/* ============================================================
+   REALTIME REQUESTS
+============================================================ */
+
+function setupRequestRealtime(){
+
+    if(requestChannel){
+
+        supabaseClient.removeChannel(
+            requestChannel
+        );
+    }
+
+    requestChannel =
+        supabaseClient
+            .channel(
+                "requests-live-" +
+                currentUser.id
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event:"*",
+                    schema:"public",
+                    table:"friend_requests"
+                },
+                async payload => {
+
+                    await loadRequests();
+                    await loadFriends();
+                }
+            )
+            .subscribe();
+}
+
+
+/* ============================================================
+   GLOBAL REALTIME
+============================================================ */
+
+function setupRealtime(){
+
+    setupRequestRealtime();
+    setupCommunityRealtime();
+
+    /*
+       Direct messages are subscribed when
+       an individual chat is opened.
+    */
+}
+
+
+/* ============================================================
+   STATS
+============================================================ */
+
+function updateStats(){
+
+    $("homeFriendCount").textContent =
+        friends.length;
+
+    $("homeRequestCount").textContent =
+        requests.length;
+
+    $("homeCommunityCount").textContent =
+        communities.length;
+}
+
+
+/* ============================================================
+   EMOJIS
+============================================================ */
+
+const emojis = [
+    "😀","😃","😄","😁","😆","😅","😂","🤣",
+    "😊","😇","🙂","🙃","😉","😌","😍","🥰",
+    "😘","😎","🤩","🥳","😏","😭","😤","😡",
+    "🤔","🤯","😱","😴","🤝","👏","🙌","🔥",
+    "❤️","💙","💜","💯","✨","⭐","🎉","🚀",
+    "⚡","🌎","🎮","⚽","🏆","😂","👍","👎"
+];
+
+function buildEmojiPanel(
+    panelId,
+    inputId
+){
+
+    const panel =
+        $(panelId);
+
+    panel.innerHTML =
+        emojis.map(e=>`
+
+            <button
+                class="emoji"
+                type="button"
+            >
+                ${e}
+            </button>
+
+        `).join("");
+
+    panel.addEventListener(
+        "click",
+        e => {
+
+            const button =
+                e.target.closest(".emoji");
+
+            if(!button)
+                return;
+
+            const input =
+                $(inputId);
+
+            input.value +=
+                button.textContent;
+
+            input.focus();
+        }
+    );
+}
+
+buildEmojiPanel(
+    "directEmojiPanel",
+    "messageInput"
+);
+
+buildEmojiPanel(
+    "communityEmojiPanel",
+    "communityMessageInput"
+);
+
+
+/* ============================================================
+   EMOJI TOGGLES
+============================================================ */
+
+$("directEmojiBtn").onclick =
+    ()=>{
+
+        $("directEmojiPanel")
+            .classList.toggle("show");
+
+        $("communityEmojiPanel")
+            .classList.remove("show");
+    };
+
+$("communityEmojiBtn").onclick =
+    ()=>{
+
+        $("communityEmojiPanel")
+            .classList.toggle("show");
+
+        $("directEmojiPanel")
+            .classList.remove("show");
+    };
+
+
+document.addEventListener(
+    "click",
+    e => {
+
+        if(
+            !e.target.closest(
+                "#directEmojiPanel,#directEmojiBtn"
+            )
+        ){
+
+            $("directEmojiPanel")
+                .classList.remove("show");
+        }
+
+        if(
+            !e.target.closest(
+                "#communityEmojiPanel,#communityEmojiBtn"
+            )
+        ){
+
+            $("communityEmojiPanel")
+                .classList.remove("show");
+        }
+    }
+);
+
+
+/* ============================================================
+   FILE PICKERS
+============================================================ */
+
+$("directFileBtn").onclick =
+    ()=>{
+        $("directFileInput").click();
+    };
+
+$("directFileInput").onchange =
+    ()=>{
+        const file =
+            $("directFileInput")
+                .files[0];
+
+        $("directFileName").textContent =
+            file
+                ? file.name
+                : "";
+    };
+
+
+$("communityFileBtn").onclick =
+    ()=>{
+        $("communityFileInput").click();
+    };
+
+$("communityFileInput").onchange =
+    ()=>{
+        const file =
+            $("communityFileInput")
+                .files[0];
+
+        $("communityFileName").textContent =
+            file
+                ? file.name
+                : "";
+    };
+
+
+/* ============================================================
+   AUTH SESSION
+============================================================ */
+
+(async function(){
+
+    const {
+        data:{session}
+    } =
+        await supabaseClient.auth.getSession();
+
+    if(session){
+
+        currentUser =
+            session.user;
+
+        await startApp();
+    }
+
+})();
+
+
+/* ============================================================
+   AUTH STATE CHANGE
+============================================================ */
+
+supabaseClient.auth.onAuthStateChange(
+    async (event,session)=>{
+
+        if(
+            event === "SIGNED_IN" &&
+            session
+        ){
+
+            currentUser =
+                session.user;
+
+            if(
+                $("app").style.display !==
+                "block"
+            ){
+
+                await startApp();
+            }
+        }
+
+        if(event === "SIGNED_OUT"){
+
+            currentUser = null;
+
+            location.reload();
+        }
+    }
+);
+
+</script>
 
 </body>
 </html>
